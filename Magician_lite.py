@@ -15,8 +15,8 @@ ystart = y
 zstart = z
 rstart = r-135
 xbias = 76
-ybias = -(6.3*w)
-zbias = 80
+ybias = -126
+zbias = 85
 
 def calibrate():
     device.move_to(xstart, ystart, zstart, 0, wait = True)
@@ -34,14 +34,17 @@ def produktion(x1, y1, x2, y2, direction = 0):
     ykoord = ystart + ybias + w*y1
     device.move_to(xkoord, ykoord, zstart, rstart, wait = True)
     device.move_to(xkoord, ykoord, zstart-zbias, rstart, wait = True)
-    sleep(5)
+    sleep(1)
     device.suck(enable=True)
 
+    reset()
+
     xkoord = xstart + xbias + w*x2
-    ykoord = ystart - ybias - w*y2
-    device.move_to(xkoord, ykoord, zstart, rstart, wait = True)
-    device.move_to(xkoord, ykoord, zstart-zbias, rstart, wait = True)
-    sleep(5)
+    ykoord = ystart - ybias
+    device.move_to(xkoord, ystart, zstart, rstart, wait = True)
+    device.move_to(xkoord, ystart+80, zstart, rstart+270, wait = True)
+    device.move_to(xkoord, ystart+80, zstart-zbias, rstart+270, wait = True)
+    sleep(1)
     device.suck(enable = False)
 
     reset()
