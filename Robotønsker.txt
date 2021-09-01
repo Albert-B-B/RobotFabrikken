@@ -1,0 +1,6 @@
+Robotønsker
+
+- Kalibrering af robotten
+- Koordinat til koordinat
+- Vilkårlig placering af materialer
+- Ingen interferens mellem materialerne
