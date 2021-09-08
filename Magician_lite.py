@@ -1,8 +1,37 @@
 from serial.tools import list_ports
 import tkinter as tk
 import pydobot
+import sqlite3
 from time import sleep
 
+#Code for database
+con = sqlite3.connect('start.db')
+
+try:
+    con.execute("""CREATE TABLE ordre (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		indhold1 INTEGER,
+        indhold2 INTEGER,
+        udført INTEGER,
+        movefrom INTEGER,
+        moveto INTEGER)""")
+except Exception as e:
+    print('Error Raised:')
+    print(e)
+    
+try:
+    con.execute("""CREATE TABLE materialer (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		indhold INTEGER,
+        xkoord INTEGER,
+        ykoord INTEGER
+        )""")
+except Exception as e:
+    print('Error Raised:')
+    print(e)
+
+#Code for moving robot
+"""
 available_ports = list_ports.comports()
 port = available_ports[0].device
 
@@ -17,6 +46,7 @@ rstart = r-135
 xbias = 76
 ybias = -(6.3*w)
 zbias = 80
+
 
 def calibrate():
     device.move_to(xstart, ystart, zstart, 0, wait = True)
@@ -49,7 +79,7 @@ def produktion(x1, y1, x2, y2, direction = 0):
 #device.suck(enable=False)
 produktion(0,0,0,0)
 calibrate()
-
+"""
 
 
 
