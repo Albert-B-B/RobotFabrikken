@@ -1,3 +1,5 @@
+#Robottens navn er Yusuf
+
 from serial.tools import list_ports
 import tkinter as tk
 import pydobot
@@ -14,9 +16,9 @@ xstart = x
 ystart = y
 zstart = z
 rstart = r-135
-xbias = 76
+xbias = 75
 ybias = -126
-zbias = 85
+zbias = 87
 
 def calibrate():
     device.move_to(xstart, ystart, zstart, 0, wait = True)
@@ -41,18 +43,19 @@ def produktion(x1, y1, x2, y2, direction = 0):
 
     xkoord = xstart + xbias + w*x2
     ykoord = ystart - ybias
-    device.move_to(xkoord, ystart, zstart, rstart, wait = True)
-    device.move_to(xkoord, ystart+80, zstart, rstart+270, wait = True)
-    device.move_to(xkoord, ystart+80, zstart-zbias, rstart+270, wait = True)
+    device.move_to(xkoord, ystart+67, zstart, rstart+275, wait = True)
+    device.move_to(xkoord, ystart+67, zstart-zbias, rstart+275, wait = True)
     sleep(1)
     device.suck(enable = False)
 
     reset()
 
-#device.suck(enable=False)
+
+tilstand = 0
+
 produktion(0,0,0,0)
 calibrate()
-
+device.suck(enable = False)
 
 
 
