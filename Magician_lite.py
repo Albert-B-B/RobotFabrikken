@@ -6,6 +6,7 @@ import pydobot
 import sqlite3
 from time import sleep
 
+<<<<<<< HEAD
 #Start konfigurationen er farverne i rækkefølgen Rød, gul, grøn og blå.
 #Det er det for alle rækker
 
@@ -35,6 +36,70 @@ try:
 except Exception as e:
     print('Error Raised:')
     print(e)
+=======
+class dorobot():
+    def __init__(self):
+        #Code for database
+        self.con = sqlite3.connect('start.db')
+        
+        try:
+            c = self.con.cursor()
+            self.con.execute("""CREATE TABLE ordre (
+        		id INTEGER PRIMARY KEY AUTOINCREMENT,
+        		indhold1 INTEGER,
+                indhold2 INTEGER,
+                udført INTEGER,
+                movefrom INTEGER,
+                moveto INTEGER)""")
+            c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)",(2345234523452345,2000000000000000,0,1,0))
+            c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)",(2345234523452345,2000000000000000,0,1,0))
+        except Exception as e:
+            print('Error Raised Ordre:')
+        
+        
+            print(e)
+            
+        try:
+            self.con.execute("""CREATE TABLE materialer (
+        		id INTEGER PRIMARY KEY AUTOINCREMENT,
+        		indhold INTEGER,
+                xkoord INTEGER,
+                ykoord INTEGER
+                )""")
+            c = self.con.cursor()
+            c.execute("INSERT INTO materialer (indhold,xkoord,ykoord) VALUES (?,?,?)",(2345234523452345,0,0))
+            c.execute("INSERT INTO materialer (indhold,xkoord,ykoord) VALUES (?,?,?)",(0000000000000000,0,0))
+        
+        except Exception as e:
+            print('Error Raised materialer:')
+            print(e)
+    
+        def getUnsolvedOrdre(self):
+            c = self.con.cursor()
+            ordreID = None
+            c.execute("SELECT id FROM ordre WHERE udført = 0")
+            for p in c:
+                ordreID = p[0]
+                break
+            self.con.commit()
+            return ordreID
+            
+        def solveOrdre(ordreID):
+            c = self.con.cursor()
+        
+        
+            output = c.execute("SELECT indhold1,indhold2,movefrom,moveto FROM ordre WHERE id = ?",[ordreID]).fetchall()
+            indhold1 = output[0][0]
+            indhold2 = output[0][1]
+            idfrom = output[0][2]
+            idto = output[0][3]
+            
+            pallet1 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idfrom]).fetchall()
+            pallet2 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idto]).fetchall()
+            self.con.commit()
+        def get_digit(number, n):
+            return number // 10**n % 10
+>>>>>>> d7b3bfa79cb59ae6f68407812b100b4ee4c51ab1
 
 #Code for moving robot
 
@@ -90,6 +155,7 @@ tilstand = 0
 produktion(0,0,0,0)
 calibrate()
 device.suck(enable = False)
+<<<<<<< HEAD
 
 
 class Robot_gui():
@@ -150,4 +216,9 @@ while GRØN <= 5 and RØD <= 5:
 
 device.close()
 """
+=======
+=======
+"""
+
+>>>>>>> d7b3bfa79cb59ae6f68407812b100b4ee4c51ab1
 print('hello world')
