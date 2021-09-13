@@ -6,6 +6,10 @@ import pydobot
 import sqlite3
 from time import sleep
 
+#Start konfigurationen er farverne i rækkefølgen Rød, gul, grøn og blå.
+#Det er det for alle rækker
+
+
 #Code for database
 con = sqlite3.connect('start.db')
 
@@ -20,7 +24,7 @@ try:
 except Exception as e:
     print('Error Raised:')
     print(e)
-    
+
 try:
     con.execute("""CREATE TABLE materialer (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,7 +37,7 @@ except Exception as e:
     print(e)
 
 #Code for moving robot
-"""
+
 available_ports = list_ports.comports()
 port = available_ports[0].device
 
@@ -85,12 +89,22 @@ tilstand = 0
 
 produktion(0,0,0,0)
 calibrate()
-<<<<<<< HEAD
 device.suck(enable = False)
-=======
-"""
->>>>>>> 70c0252b4a13a398c9a85a34e3238210513097d2
 
+
+class Robot_gui():
+
+    def __innit__(self, master=None):
+        tk.frame.__innit__(self, master)
+
+        self.build_GUI()
+
+    def build_GUI(self):
+        self.pack(side = tk.BOTTOM)
+
+        self.mats.create_rectangle(0,0,100,100, outline="black", fill="white")
+app = Robot_gui()
+app.mainloop
 
 
 
