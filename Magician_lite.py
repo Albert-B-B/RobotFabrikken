@@ -6,32 +6,70 @@ import pydobot
 import sqlite3
 from time import sleep
 
-#Code for database
-con = sqlite3.connect('start.db')
-
-try:
-    con.execute("""CREATE TABLE ordre (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		indhold1 INTEGER,
-        indhold2 INTEGER,
-        udført INTEGER,
-        movefrom INTEGER,
-        moveto INTEGER)""")
-except Exception as e:
-    print('Error Raised:')
-    print(e)
+class dorobot():
+    def __init__(self):
+        #Code for database
+        self.con = sqlite3.connect('start.db')
+        
+        try:
+            c = self.con.cursor()
+            self.con.execute("""CREATE TABLE ordre (
+        		id INTEGER PRIMARY KEY AUTOINCREMENT,
+        		indhold1 INTEGER,
+                indhold2 INTEGER,
+                udført INTEGER,
+                movefrom INTEGER,
+                moveto INTEGER)""")
+            c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)",(2345234523452345,2000000000000000,0,1,0))
+            c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)",(2345234523452345,2000000000000000,0,1,0))
+        except Exception as e:
+            print('Error Raised Ordre:')
+        
+        
+            print(e)
+            
+        try:
+            self.con.execute("""CREATE TABLE materialer (
+        		id INTEGER PRIMARY KEY AUTOINCREMENT,
+        		indhold INTEGER,
+                xkoord INTEGER,
+                ykoord INTEGER
+                )""")
+            c = self.con.cursor()
+            c.execute("INSERT INTO materialer (indhold,xkoord,ykoord) VALUES (?,?,?)",(2345234523452345,0,0))
+            c.execute("INSERT INTO materialer (indhold,xkoord,ykoord) VALUES (?,?,?)",(0000000000000000,0,0))
+        
+        except Exception as e:
+            print('Error Raised materialer:')
+            print(e)
     
-try:
-    con.execute("""CREATE TABLE materialer (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		indhold INTEGER,
-        xkoord INTEGER,
-        ykoord INTEGER
-        )""")
-except Exception as e:
-    print('Error Raised:')
-    print(e)
-
+        def getUnsolvedOrdre(self):
+            c = self.con.cursor()
+            ordreID = None
+            c.execute("SELECT id FROM ordre WHERE udført = 0")
+            for p in c:
+                ordreID = p[0]
+                break
+            self.con.commit()
+            return ordreID
+            
+        def solveOrdre(ordreID):
+            c = self.con.cursor()
+        
+        
+            output = c.execute("SELECT indhold1,indhold2,movefrom,moveto FROM ordre WHERE id = ?",[ordreID]).fetchall()
+            indhold1 = output[0][0]
+            indhold2 = output[0][1]
+            idfrom = output[0][2]
+            idto = output[0][3]
+            
+            pallet1 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idfrom]).fetchall()
+            pallet2 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idto]).fetchall()
+            self.con.commit()
+        def get_digit(number, n):
+            return number // 10**n % 10
+print(getUnsolvedOrdre())
+solveOrdre(getUnsolvedOrdre())
 #Code for moving robot
 """
 available_ports = list_ports.comports()
@@ -89,51 +127,6 @@ calibrate()
 device.suck(enable = False)
 =======
 """
->>>>>>> 70c0252b4a13a398c9a85a34e3238210513097d2
 
-
-
-
-
-
-
-
-
-
-"""
-print(f'x:{x} y:{y} z:{z} j1:{j1} j2:{j2} j3:{j3} j4:{j4}')
-GRØN = 0
-RØD = 0
-
-while GRØN <= 5 and RØD <= 5:
-
-    farve = input('Indtast hvilken farve: ')
-
-    if farve == 'stop':
-        device.close()
-        break
-
-#If statement that moves a green package if green is called
-    if farve == 'grøn':
-        device.move_to(x+50, y-69-GRØN*20, z-95, r, wait=True)
-        device.suck(enable=True)
-        device.move_to(x, y, z+100, r, wait=True)
-        device.move_to(x+52, y+135-GRØN*20, z-90, r, wait=True)
-        device.suck(enable=False)
-        device.move_to(x, y, z, r, wait=True)
-        GRØN += 1
-
-#If statement that moves a red package if red is called
-    elif farve == 'rød':
-        device.move_to(x+70, y-69-RØD*20, z-96, r, wait=True)
-        device.suck(enable=True)
-        device.move_to(x, y, z+100, r, wait=True)
-        device.move_to(x+70, y+135-RØD*20, z-90, r, wait=True)
-        device.suck(enable=False)
-        device.move_to(x, y, z, r, wait=True)
-        RØD += 1
-
-
-device.close()
-"""
 print('hello world')
+c = con.cursor()
