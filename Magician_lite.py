@@ -68,8 +68,7 @@ class dorobot():
             self.con.commit()
         def get_digit(number, n):
             return number // 10**n % 10
-print(getUnsolvedOrdre())
-solveOrdre(getUnsolvedOrdre())
+
 #Code for moving robot
 """
 available_ports = list_ports.comports()
@@ -129,4 +128,3 @@ device.suck(enable = False)
 """
 
 print('hello world')
-c = con.cursor()
