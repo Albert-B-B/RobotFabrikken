@@ -6,42 +6,12 @@ import pydobot
 import sqlite3
 from time import sleep
 
-<<<<<<< HEAD
-#Start konfigurationen er farverne i rækkefølgen Rød, gul, grøn og blå.
-#Det er det for alle rækker
 
-
-#Code for database
-con = sqlite3.connect('start.db')
-
-try:
-    con.execute("""CREATE TABLE ordre (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		indhold1 INTEGER,
-        indhold2 INTEGER,
-        udført INTEGER,
-        movefrom INTEGER,
-        moveto INTEGER)""")
-except Exception as e:
-    print('Error Raised:')
-    print(e)
-
-try:
-    con.execute("""CREATE TABLE materialer (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		indhold INTEGER,
-        xkoord INTEGER,
-        ykoord INTEGER
-        )""")
-except Exception as e:
-    print('Error Raised:')
-    print(e)
-=======
 class dorobot():
     def __init__(self):
         #Code for database
         self.con = sqlite3.connect('start.db')
-        
+
         try:
             c = self.con.cursor()
             self.con.execute("""CREATE TABLE ordre (
@@ -55,10 +25,10 @@ class dorobot():
             c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)",(2345234523452345,2000000000000000,0,1,0))
         except Exception as e:
             print('Error Raised Ordre:')
-        
-        
+
+
             print(e)
-            
+
         try:
             self.con.execute("""CREATE TABLE materialer (
         		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -69,11 +39,11 @@ class dorobot():
             c = self.con.cursor()
             c.execute("INSERT INTO materialer (indhold,xkoord,ykoord) VALUES (?,?,?)",(2345234523452345,0,0))
             c.execute("INSERT INTO materialer (indhold,xkoord,ykoord) VALUES (?,?,?)",(0000000000000000,0,0))
-        
+
         except Exception as e:
             print('Error Raised materialer:')
             print(e)
-    
+
         def getUnsolvedOrdre(self):
             c = self.con.cursor()
             ordreID = None
@@ -83,17 +53,21 @@ class dorobot():
                 break
             self.con.commit()
             return ordreID
-            
+
+        def updateStateOrdre(self,palletid,newState):
+            c=self.con.curser()
+            c.execute("UPDATE ordre SET udført=? WHERE id=?",(newState,palletid))
+
         def solveOrdre(ordreID):
             c = self.con.cursor()
-        
-        
+
+
             output = c.execute("SELECT indhold1,indhold2,movefrom,moveto FROM ordre WHERE id = ?",[ordreID]).fetchall()
             indhold1 = output[0][0]
             indhold2 = output[0][1]
             idfrom = output[0][2]
             idto = output[0][3]
-            
+
             pallet1 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idfrom]).fetchall()
             pallet2 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idto]).fetchall()
             self.con.commit()
