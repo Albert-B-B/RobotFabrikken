@@ -138,7 +138,7 @@ class Robot_gui(tk.Frame):
     def change_color(self, button):
         button.configure(bg= self.new_fill)
 
-        
+
     def calibrate(self):
         self.device.move_to(self.xstart, self.ystart, self.zstart, 0, wait = True)
 
