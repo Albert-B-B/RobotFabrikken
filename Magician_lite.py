@@ -105,10 +105,10 @@ class dbClass():
         #Order was invalid
         else:
             self.changeStatus(ordreID, -1)
-datebase = dbClass()
+datebaseRobot = dbClass()
 
 
-
+print(datebaseRobot)
 print('hello world')
 
 #Start konfigurationen er farverne i rækkefølgen Rød, gul, grøn og blå.
@@ -387,4 +387,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    #main()
+    pass
