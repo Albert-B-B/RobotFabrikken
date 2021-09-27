@@ -101,9 +101,7 @@ class dbClass():
         #Order was invalid
         else:
             self.changeStatus(ordreID, -1)
-robot = dbClass()
-print(robot.getUnsolvedOrdre())
-robot.solveOrdre(robot.getUnsolvedOrdre())
+
 
 print('hello world')
 
@@ -338,6 +336,8 @@ class Robot_gui(tk.Frame):
         color2 = color2.replace('blue', '5')
         print(color2)
 
+        self.db.addOrdre(1, int(color), 2, int(color2))
+
 
     #Farven på knappen, der trykkes, ændres
     def change_color(self, button):
@@ -381,6 +381,7 @@ def main():
     databaseRobot = dbClass()
     root = Tk()
     ex = Robot_gui()
+    ex.connect_database(databaseRobot)
     root.geometry("1920x1080")
     root.mainloop()
 
