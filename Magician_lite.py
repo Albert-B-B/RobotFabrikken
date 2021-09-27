@@ -72,6 +72,12 @@ class dbClass():
                 return False
 
         return True
+
+    def addOrdre(self,palletID1,indhold1,palletID2,indhold2):
+        c = self.con.cursor()
+        c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)", (indhold1,indhold2,0,palletID1,palletID2))
+        self.con.commit()
+
     def changeStatus(self,ordreID,value):
         c = self.con.cursor()
         c.execute("UPDATE ordre SET udført = ? WHERE id = ?",(value,ordreID))
