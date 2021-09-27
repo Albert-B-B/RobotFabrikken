@@ -305,7 +305,7 @@ class Robot_gui(tk.Frame):
         color += self.box15['bg']
         color += self.box16['bg']
 
-        
+
         color = color.replace('white', '1')
         color = color.replace("red", "2")
         color = color.replace('yellow', '3')
@@ -384,32 +384,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-#Code for database
-con = sqlite3.connect('start.db')
-
-try:
-    con.execute("""CREATE TABLE ordre (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		indhold1 INTEGER,
-        indhold2 INTEGER,
-        udført INTEGER,
-        movefrom INTEGER,
-        moveto INTEGER)""")
-except Exception as e:
-    print('Error Raised:')
-    print(e)
-
-try:
-    con.execute("""CREATE TABLE materialer (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		indhold INTEGER,
-        xkoord INTEGER,
-        ykoord INTEGER
-        )""")
-except Exception as e:
-    print('Error Raised:')
-    print(e)
