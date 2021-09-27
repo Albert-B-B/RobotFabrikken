@@ -6,9 +6,10 @@ import pydobot
 import sqlite3
 from time import sleep
 
-class dorobot():
+class robotClass():
     def __init__(self):
         #Code for database
+        self.palletSize = 16 
         self.con = sqlite3.connect('start.db')
         
         try:
@@ -43,32 +44,53 @@ class dorobot():
             print('Error Raised materialer:')
             print(e)
     
-        def getUnsolvedOrdre(self):
-            c = self.con.cursor()
-            ordreID = None
-            c.execute("SELECT id FROM ordre WHERE udført = 0")
-            for p in c:
-                ordreID = p[0]
-                break
-            self.con.commit()
-            return ordreID
-            
-        def solveOrdre(ordreID):
-            c = self.con.cursor()
+    def getUnsolvedOrdre(self):
+        c = self.con.cursor()
+        ordreID = None
+        c.execute("SELECT id FROM ordre WHERE udført = 0")
+        for p in c:
+            ordreID = p[0]
+            break
+        self.con.commit()
+        return ordreID
+    def get_digit(self,number, n):
+        return number // 10**n % 10
+    def getNumbDigits(self,pallet):
+        total = [0,0,0,0,0]
+        for i in range(self.palletSize):
+            total[self.get_digit(pallet,i)-1] += 1
+        return total
+    def validateOrdre(self,pallet1,pallet2,pallet3,pallet4):
+        p1t = self.getNumbDigits(pallet1)
+        p2t = self.getNumbDigits(pallet2)
+        p3t = self.getNumbDigits(pallet3)
+        p4t = self.getNumbDigits(pallet4)
         
+        for i in range(4):
+            if p1t[i+1]+p2t[i+1]!= p3t[i+1]+p4t[i+1]:
+                return False
         
-            output = c.execute("SELECT indhold1,indhold2,movefrom,moveto FROM ordre WHERE id = ?",[ordreID]).fetchall()
-            indhold1 = output[0][0]
-            indhold2 = output[0][1]
-            idfrom = output[0][2]
-            idto = output[0][3]
-            
-            pallet1 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idfrom]).fetchall()
-            pallet2 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idto]).fetchall()
-            self.con.commit()
-        def get_digit(number, n):
-            return number // 10**n % 10
-
+        return True
+        
+    def solveOrdre(self,ordreID):
+        c = self.con.cursor()
+    
+    
+        output = c.execute("SELECT indhold1,indhold2,movefrom,moveto FROM ordre WHERE id = ?",[ordreID]).fetchall()
+        indhold1 = output[0][0]
+        indhold2 = output[0][1]
+        idfrom = output[0][2]
+        idto = output[0][3]
+        
+        pallet1 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idfrom]).fetchall()
+        pallet2 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idto]).fetchall()
+        self.con.commit()
+        
+        #We check if ordre is valid
+        if self.validateOrdre(indhold1,indhold2,pallet1,pallet2):
+            pass
+robot = robotClass()
+robot.solveOrdre(robot.getUnsolvedOrdre())
 #Code for moving robot
 """
 available_ports = list_ports.comports()
