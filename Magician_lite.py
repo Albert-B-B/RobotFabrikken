@@ -72,10 +72,6 @@ class dbClass():
                 return False
 
         return True
-    def addOrdre(self,palletID1,indhold1,palletID2,indhold2):
-        c = self.con.cursor()
-        c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)", (indhold1,indhold2,0,palletID1,palletID2))
-        self.con.commit()        
     def changeStatus(self,ordreID,value):
         c = self.con.cursor()
         c.execute("UPDATE ordre SET udført = ? WHERE id = ?",(value,ordreID))
@@ -105,10 +101,10 @@ class dbClass():
         #Order was invalid
         else:
             self.changeStatus(ordreID, -1)
-datebaseRobot = dbClass()
+robot = dbClass()
+print(robot.getUnsolvedOrdre())
+robot.solveOrdre(robot.getUnsolvedOrdre())
 
-
-print(datebaseRobot)
 print('hello world')
 
 #Start konfigurationen er farverne i rækkefølgen Rød, gul, grøn og blå.
@@ -356,6 +352,8 @@ class Robot_gui(tk.Frame):
         self.device.move_to(x, y, z+40, r, wait = True)
         self.device.move_to(xstart, ystart, zstart, rstart, wait = True)
 
+    def connect_database(self, database):
+        self.db = database
 
     def produktion(self, x1, y1, x2, y2, direction = 0):
         calibrate()
@@ -380,6 +378,7 @@ class Robot_gui(tk.Frame):
 
 
 def main():
+    databaseRobot = dbClass()
     root = Tk()
     ex = Robot_gui()
     root.geometry("1920x1080")
@@ -387,5 +386,4 @@ def main():
 
 
 if __name__ == '__main__':
-    #main()
-    pass
+    main()
