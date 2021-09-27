@@ -6,7 +6,6 @@ import pydobot
 import sqlite3
 from time import sleep
 
-<<<<<<< HEAD
 
 class dorobot():
     def __init__(self):
@@ -74,38 +73,6 @@ class dorobot():
             self.con.commit()
         def get_digit(number, n):
             return number // 10**n % 10
->>>>>>> d7b3bfa79cb59ae6f68407812b100b4ee4c51ab1
-=======
-#Start konfigurationen er farverne i rækkefølgen Rød, gul, grøn og blå.
-#Det er det for alle rækker
-
-
-#Code for database
-con = sqlite3.connect('start.db')
-
-try:
-    con.execute("""CREATE TABLE ordre (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		indhold1 INTEGER,
-        indhold2 INTEGER,
-        udført INTEGER,
-        movefrom INTEGER,
-        moveto INTEGER)""")
-except Exception as e:
-    print('Error Raised:')
-    print(e)
-
-try:
-    con.execute("""CREATE TABLE materialer (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		indhold INTEGER,
-        xkoord INTEGER,
-        ykoord INTEGER
-        )""")
-except Exception as e:
-    print('Error Raised:')
-    print(e)
->>>>>>> d778c9caeff0fb71ba1b60d5a9e41d102c5ea606
 
 #Code for moving robot
 available_ports = list_ports.comports()
