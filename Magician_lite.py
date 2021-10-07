@@ -245,7 +245,7 @@ class Robot_gui(tk.Frame):
         self.box16.grid(column=4, row=4)
 
         #Knappen der bruges til at sende ordren afsted
-        self.send_order = tk.Button(self.master,bg='red',text='SEND ORDER',height=10,width=10)
+        self.send_order = tk.Button(self.master,bg='red',text='SEND ORDER',height=10,width=10, command = lambda: self.order())
         self.send_order.grid(column=10,row=2,rowspan=2)
 
 
@@ -305,7 +305,58 @@ class Robot_gui(tk.Frame):
     def change_color(self, button):
         button.configure(bg= self.new_fill)
 
+    def order(self):
+        color = self.box1['bg']
+        color += self.box2['bg']
+        color += self.box3['bg']
+        color += self.box4['bg']
+        color += self.box5['bg']
+        color += self.box6['bg']
+        color += self.box7['bg']
+        color += self.box8['bg']
+        color += self.box9['bg']
+        color += self.box10['bg']
+        color += self.box11['bg']
+        color += self.box12['bg']
+        color += self.box13['bg']
+        color += self.box14['bg']
+        color += self.box15['bg']
+        color += self.box16['bg']
 
+
+        color = color.replace('white', '1')
+        color = color.replace("red", "2")
+        color = color.replace('yellow', '3')
+        color = color.replace('green', '4')
+        color = color.replace('blue', '5')
+        print(color)
+
+        color2 = self.box17['bg']
+        color2 += self.box18['bg']
+        color2 += self.box19['bg']
+        color2 += self.box20['bg']
+        color2 += self.box21['bg']
+        color2 += self.box22['bg']
+        color2 += self.box23['bg']
+        color2 += self.box24['bg']
+        color2 += self.box25['bg']
+        color2 += self.box26['bg']
+        color2 += self.box27['bg']
+        color2 += self.box28['bg']
+        color2 += self.box29['bg']
+        color2 += self.box30['bg']
+        color2 += self.box31['bg']
+        color2 += self.box32['bg']
+
+
+        color2 = color2.replace('white', '1')
+        color2 = color2.replace("red", "2")
+        color2 = color2.replace('yellow', '3')
+        color2 = color2.replace('green', '4')
+        color2 = color2.replace('blue', '5')
+        print(color2)
+
+        self.db.addOrdre(1, int(color), 2, int(color2))
 
     def connect_database(self, database):
         self.db = database
@@ -344,6 +395,12 @@ def main():
     root = Tk()
     ex = Robot_gui()
     ex.connect_database(databaseRobot)
+    order_check = ex.db.getUnsolvedOrdre()
+    if order_check != None:
+        moves = ex.db.solveOrdre(order_check)
+        for i in moves:
+            ex.produktion(i[0],i[1],i[2],i[3])
+        ex.db.changeStatus(order_check,1)
     root.geometry("1920x1080")
     root.mainloop()
 
