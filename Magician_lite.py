@@ -103,6 +103,16 @@ class dbClass():
         print(pallet2[0][0])
         #Order is valid and will be executed
         if self.validateOrdre(indhold1,indhold2,pallet1[0][0],pallet2[0][0]):
+            moveList = []
+            for i in range(16):
+                colorHex = self.get_digit(pallet1[0][0],i)
+                if indhold1 == colorHex:
+                    continue
+                else:
+                    for j in range(16):
+                        if colorHex == self.get_digit(pallet2[0][0], j) and colorHex != indhold2:
+                            moveList.append([i%4,(i-i%4)/4,j%4,(j-j%4)/4])
+            return moveList
             self.changeStatus(ordreID, 1)
         #Order was invalid
         else:
