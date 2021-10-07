@@ -7,6 +7,133 @@ import pydobot
 import sqlite3
 from time import sleep
 
+<<<<<<< HEAD
+=======
+class dbClass():
+    def __init__(self):
+        #Code for database
+        self.con = sqlite3.connect('start.db')
+        self.palletSize = 16
+        try:
+            c = self.con.cursor()
+            self.con.execute("""CREATE TABLE ordre (
+        		id INTEGER PRIMARY KEY AUTOINCREMENT,
+        		indhold1 INTEGER,
+                indhold2 INTEGER,
+                udført INTEGER,
+                movefrom INTEGER,
+                moveto INTEGER)""")
+            c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)", (1345214523452345,1111121111111311,0,1,2))
+            #c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)",(2345234523452345,2000000000000000,0,1,0))
+        except Exception as e:
+            print('Error Raised Ordre:')
+
+
+            print(e)
+
+        try:
+            self.con.execute("""CREATE TABLE materialer (
+        		id INTEGER PRIMARY KEY AUTOINCREMENT,
+        		indhold INTEGER,
+                xkoord INTEGER,
+                ykoord INTEGER
+                )""")
+            c = self.con.cursor()
+            c.execute("INSERT INTO materialer (indhold,xkoord,ykoord) VALUES (?,?,?)",(2345234523452345,0,0))
+            c.execute("INSERT INTO materialer (indhold,xkoord,ykoord) VALUES (?,?,?)",(1111111111111111,0,0))
+
+        except Exception as e:
+            print('Error Raised materialer:')
+            print(e)
+
+    def getUnsolvedOrdre(self):
+        c = self.con.cursor()
+        ordreID = None
+        c.execute("SELECT id FROM ordre WHERE udført = 0")
+        for p in c:
+            ordreID = p[0]
+            break
+        self.con.commit()
+        return ordreID
+    def get_digit(self,number, n):
+        k = self.palletSize - n-1
+        return number // 10**k % 10
+    def getNumbDigits(self,pallet):
+        total = [0,0,0,0,0]
+        for i in range(self.palletSize):
+            total[self.get_digit(pallet,i)-1] += 1
+        return total
+    def validateOrdre(self,pallet1,pallet2,pallet3,pallet4):
+        p1t = self.getNumbDigits(pallet1)
+        p2t = self.getNumbDigits(pallet2)
+        p3t = self.getNumbDigits(pallet3)
+        p4t = self.getNumbDigits(pallet4)
+
+        for i in range(4):
+            if p1t[i+1]+p2t[i+1]!= p3t[i+1]+p4t[i+1]:
+                print(i)
+                return False
+
+        return True
+
+    def addOrdre(self,palletID1,indhold1,palletID2,indhold2):
+        c = self.con.cursor()
+        c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)", (indhold1,indhold2,0,palletID1,palletID2))
+        self.con.commit()
+
+    def changeStatus(self,ordreID,value):
+        c = self.con.cursor()
+        c.execute("UPDATE ordre SET udført = ? WHERE id = ?",(value,ordreID))
+        self.con.commit()
+    def solveOrdre(self,ordreID):
+        c = self.con.cursor()
+
+
+        output = c.execute("SELECT indhold1,indhold2,movefrom,moveto FROM ordre WHERE id = ?",[ordreID]).fetchall()
+        indhold1 = output[0][0]
+        indhold2 = output[0][1]
+        idfrom = output[0][2]
+        idto = output[0][3]
+
+        pallet1 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idto]).fetchall()
+        pallet2 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idfrom]).fetchall()
+        self.con.commit()
+
+        #We check if ordre is valid
+        print("Move stuff")
+        print(indhold1)
+        print(indhold2)
+        print(pallet1[0][0])
+        print(pallet2[0][0])
+        #Order is valid and will be executed
+        if self.validateOrdre(indhold1,indhold2,pallet1[0][0],pallet2[0][0]):
+            moveList = []
+            for i in range(self.palletSize):
+                colorHex = self.get_digit(pallet1[0][0],i)
+                if i == 0:
+                    print(colorHex)
+                if self.get_digit(indhold1,i) == self.get_digit(pallet1[0][0],i):
+                    continue
+                else:
+                    for j in range(self.palletSize):
+                        if i==0:
+                            print("The one to rule em all")
+                            print(colorHex)
+                            self.get_digit(pallet2[0][0], j)
+                        if colorHex == self.get_digit(indhold2, j) and self.get_digit(pallet2[0][0], j) == 1:
+                            moveList.append([i%4,int((i-i%4)/4),j%4,int((j-j%4)/4),idto,idfrom])
+                            continue
+            #self.changeStatus(ordreID, 1)
+            return moveList
+        #Order was invalid
+        else:
+            print("Whack job")
+            self.changeStatus(ordreID, -1)
+
+
+print('hello world')
+
+>>>>>>> c3026b3ad4314cdda22f9325276b990941b7b684
 #Start konfigurationen er farverne i rækkefølgen Rød, gul, grøn og blå.
 #Det er det for alle rækker
 
@@ -187,6 +314,63 @@ class Robot_gui(tk.Frame):
         elif f == 5:
             self.new_fill = 'blue'
 
+<<<<<<< HEAD
+=======
+    def order(self):
+        color = self.box1['bg']
+        color += self.box2['bg']
+        color += self.box3['bg']
+        color += self.box4['bg']
+        color += self.box5['bg']
+        color += self.box6['bg']
+        color += self.box7['bg']
+        color += self.box8['bg']
+        color += self.box9['bg']
+        color += self.box10['bg']
+        color += self.box11['bg']
+        color += self.box12['bg']
+        color += self.box13['bg']
+        color += self.box14['bg']
+        color += self.box15['bg']
+        color += self.box16['bg']
+
+
+        color = color.replace('white', '1')
+        color = color.replace("red", "2")
+        color = color.replace('yellow', '3')
+        color = color.replace('green', '4')
+        color = color.replace('blue', '5')
+        print(color)
+
+        color2 = self.box17['bg']
+        color2 += self.box18['bg']
+        color2 += self.box19['bg']
+        color2 += self.box20['bg']
+        color2 += self.box21['bg']
+        color2 += self.box22['bg']
+        color2 += self.box23['bg']
+        color2 += self.box24['bg']
+        color2 += self.box25['bg']
+        color2 += self.box26['bg']
+        color2 += self.box27['bg']
+        color2 += self.box28['bg']
+        color2 += self.box29['bg']
+        color2 += self.box30['bg']
+        color2 += self.box31['bg']
+        color2 += self.box32['bg']
+
+
+        color2 = color2.replace('white', '1')
+        color2 = color2.replace("red", "2")
+        color2 = color2.replace('yellow', '3')
+        color2 = color2.replace('green', '4')
+        color2 = color2.replace('blue', '5')
+        print(color2)
+
+        self.db.addOrdre(1, int(color), 2, int(color2))
+
+
+>>>>>>> c3026b3ad4314cdda22f9325276b990941b7b684
     #Farven på knappen, der trykkes, ændres
     def change_color(self, button):
         button.configure(bg= self.new_fill)
@@ -200,6 +384,8 @@ class Robot_gui(tk.Frame):
         self.device.move_to(x, y, z+40, r, wait = True)
         self.device.move_to(xstart, ystart, zstart, rstart, wait = True)
 
+    def connect_database(self, database):
+        self.db = database
 
     def produktion(self, x1, y1, x2, y2, direction = 0):
         calibrate()
@@ -224,10 +410,13 @@ class Robot_gui(tk.Frame):
 
 
 def main():
-    root = Tk()
-    ex = Robot_gui()
-    root.geometry("1920x1080")
-    root.mainloop()
+    databaseRobot = dbClass()
+    print(databaseRobot.solveOrdre(databaseRobot.getUnsolvedOrdre()))
+    #root = Tk()
+    #ex = Robot_gui()
+    #ex.connect_database(databaseRobot)
+    #root.geometry("1920x1080")
+    #root.mainloop()
 
 
 if __name__ == '__main__':
