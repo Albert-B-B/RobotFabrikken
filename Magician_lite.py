@@ -111,7 +111,7 @@ class dbClass():
                 else:
                     for j in range(16):
                         if colorHex == self.get_digit(pallet2[0][0], j) and colorHex != indhold2:
-                            moveList.append([i%4,(i-i%4)/4,j%4,(j-j%4)/4])
+                            moveList.append([i%4,(i-i%4)/4,j%4,(j-j%4)/4,moveFrom,moveTo])
             return moveList
             self.changeStatus(ordreID, 1)
         #Order was invalid
