@@ -21,7 +21,7 @@ class dbClass():
                 udført INTEGER,
                 movefrom INTEGER,
                 moveto INTEGER)""")
-            c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)", (1345234523452345,2111111111111111,0,1,2))
+            c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)", (1345214523452345,1111121111111311,0,1,2))
             #c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)",(2345234523452345,2000000000000000,0,1,0))
         except Exception as e:
             print('Error Raised Ordre:')
@@ -54,7 +54,8 @@ class dbClass():
         self.con.commit()
         return ordreID
     def get_digit(self,number, n):
-        return number // 10**n % 10
+        k = self.palletSize - n-1
+        return number // 10**k % 10
     def getNumbDigits(self,pallet):
         total = [0,0,0,0,0]
         for i in range(self.palletSize):
@@ -107,6 +108,8 @@ class dbClass():
             moveList = []
             for i in range(self.palletSize):
                 colorHex = self.get_digit(pallet1[0][0],i)
+                if i == 0:
+                    print(colorHex)
                 if self.get_digit(indhold1,i) == self.get_digit(pallet1[0][0],i):
                     continue
                 else:
@@ -116,9 +119,9 @@ class dbClass():
                             print(colorHex)
                             self.get_digit(pallet2[0][0], j)
                         if colorHex == self.get_digit(indhold2, j) and self.get_digit(pallet2[0][0], j) == 1:
-                            moveList.append([i%4,(i-i%4)/4,j%4,(j-j%4)/4,idto,idfrom])
+                            moveList.append([i%4,int((i-i%4)/4),j%4,int((j-j%4)/4),idto,idfrom])
                             continue
-            self.changeStatus(ordreID, 1)
+            #self.changeStatus(ordreID, 1)
             return moveList
         #Order was invalid
         else:
