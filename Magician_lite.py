@@ -7,106 +7,6 @@ import pydobot
 import sqlite3
 from time import sleep
 
-class dbClass():
-    def __init__(self):
-        #Code for database
-        self.con = sqlite3.connect('start.db')
-
-        try:
-            c = self.con.cursor()
-            self.con.execute("""CREATE TABLE ordre (
-        		id INTEGER PRIMARY KEY AUTOINCREMENT,
-        		indhold1 INTEGER,
-                indhold2 INTEGER,
-                udført INTEGER,
-                movefrom INTEGER,
-                moveto INTEGER)""")
-            c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)", (1345234523452345,2111111111111111,0,1,2))
-            #c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)",(2345234523452345,2000000000000000,0,1,0))
-        except Exception as e:
-            print('Error Raised Ordre:')
-
-
-            print(e)
-
-        try:
-            self.con.execute("""CREATE TABLE materialer (
-        		id INTEGER PRIMARY KEY AUTOINCREMENT,
-        		indhold INTEGER,
-                xkoord INTEGER,
-                ykoord INTEGER
-                )""")
-            c = self.con.cursor()
-            c.execute("INSERT INTO materialer (indhold,xkoord,ykoord) VALUES (?,?,?)",(2345234523452345,0,0))
-            c.execute("INSERT INTO materialer (indhold,xkoord,ykoord) VALUES (?,?,?)",(1111111111111111,0,0))
-
-        except Exception as e:
-            print('Error Raised materialer:')
-            print(e)
-
-    def getUnsolvedOrdre(self):
-        c = self.con.cursor()
-        ordreID = None
-        c.execute("SELECT id FROM ordre WHERE udført = 0")
-        for p in c:
-            ordreID = p[0]
-            break
-        self.con.commit()
-        return ordreID
-    def get_digit(self,number, n):
-        return number // 10**n % 10
-    def getNumbDigits(self,pallet):
-        total = [0,0,0,0,0]
-        for i in range(self.palletSize):
-            total[self.get_digit(pallet,i)-1] += 1
-        return total
-    def validateOrdre(self,pallet1,pallet2,pallet3,pallet4):
-        p1t = self.getNumbDigits(pallet1)
-        p2t = self.getNumbDigits(pallet2)
-        p3t = self.getNumbDigits(pallet3)
-        p4t = self.getNumbDigits(pallet4)
-
-        for i in range(4):
-            if p1t[i+1]+p2t[i+1]!= p3t[i+1]+p4t[i+1]:
-                print(i)
-                return False
-
-        return True
-    def changeStatus(self,ordreID,value):
-        c = self.con.cursor()
-        c.execute("UPDATE ordre SET udført = ? WHERE id = ?",(value,ordreID))
-        self.con.commit()
-    def solveOrdre(self,ordreID):
-        c = self.con.cursor()
-
-
-        output = c.execute("SELECT indhold1,indhold2,movefrom,moveto FROM ordre WHERE id = ?",[ordreID]).fetchall()
-        indhold1 = output[0][0]
-        indhold2 = output[0][1]
-        idfrom = output[0][2]
-        idto = output[0][3]
-
-        pallet1 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idfrom]).fetchall()
-        pallet2 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idto]).fetchall()
-        self.con.commit()
-
-        #We check if ordre is valid
-        print(indhold1)
-        print(indhold2)
-        print(pallet1[0][0])
-        print(pallet2[0][0])
-        #Order is valid and will be executed
-        if self.validateOrdre(indhold1,indhold2,pallet1[0][0],pallet2[0][0]):
-            self.changeStatus(ordreID, 1)
-        #Order was invalid
-        else:
-            self.changeStatus(ordreID, -1)
-robot = dbClass()
-print(robot.getUnsolvedOrdre())
-robot.solveOrdre(robot.getUnsolvedOrdre())
-
-print('hello world')
-
 #Start konfigurationen er farverne i rækkefølgen Rød, gul, grøn og blå.
 #Det er det for alle rækker
 
@@ -218,58 +118,58 @@ class Robot_gui(tk.Frame):
         self.box16.grid(column=4, row=4)
 
         #Knappen der bruges til at sende ordren afsted
-        self.send_order = tk.Button(self.master,bg='red',text='SEND ORDER',height=10,width=10,command= lambda: self.order())
+        self.send_order = tk.Button(self.master,bg='red',text='SEND ORDER',height=10,width=10)
         self.send_order.grid(column=10,row=2,rowspan=2)
 
-        self.box17 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box17 = tk.Button(self.master,bg = 'red', height = butt_height, width = butt_width)
         self.box17.configure(command= lambda: self.change_color(self.box17))
         self.box17.grid(column=12, row=1)
-        self.box18 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box18 = tk.Button(self.master,bg = 'yellow', height = butt_height, width = butt_width)
         self.box18.configure(command= lambda: self.change_color(self.box18))
         self.box18.grid(column=13, row=1)
-        self.box19 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box19 = tk.Button(self.master,bg = 'green', height = butt_height, width = butt_width)
         self.box19.configure(command= lambda: self.change_color(self.box19))
         self.box19.grid(column=14, row=1)
-        self.box20 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box20 = tk.Button(self.master,bg = 'blue', height = butt_height, width = butt_width)
         self.box20.configure(command= lambda: self.change_color(self.box20))
         self.box20.grid(column=15, row=1)
 
-        self.box21 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box21 = tk.Button(self.master,bg = 'red', height = butt_height, width = butt_width)
         self.box21.configure(command= lambda: self.change_color(self.box21))
         self.box21.grid(column=12, row=2)
-        self.box22 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box22 = tk.Button(self.master,bg = 'yellow', height = butt_height, width = butt_width)
         self.box22.configure(command= lambda: self.change_color(self.box22))
         self.box22.grid(column=13, row=2)
-        self.box23 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box23 = tk.Button(self.master,bg = 'green', height = butt_height, width = butt_width)
         self.box23.configure(command= lambda: self.change_color(self.box23))
         self.box23.grid(column=14, row=2)
-        self.box24 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box24 = tk.Button(self.master,bg = 'blue', height = butt_height, width = butt_width)
         self.box24.configure(command= lambda: self.change_color(self.box24))
         self.box24.grid(column=15, row=2)
 
-        self.box25 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box25 = tk.Button(self.master,bg = 'red', height = butt_height, width = butt_width)
         self.box25.configure(command= lambda: self.change_color(self.box25))
         self.box25.grid(column=12, row=3)
-        self.box26 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box26 = tk.Button(self.master,bg = 'yellow', height = butt_height, width = butt_width)
         self.box26.configure(command= lambda: self.change_color(self.box26))
         self.box26.grid(column=13, row=3)
-        self.box27 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box27 = tk.Button(self.master,bg = 'green', height = butt_height, width = butt_width)
         self.box27.configure(command= lambda: self.change_color(self.box27))
         self.box27.grid(column=14, row=3)
-        self.box28 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box28 = tk.Button(self.master,bg = 'blue', height = butt_height, width = butt_width)
         self.box28.configure(command= lambda: self.change_color(self.box28))
         self.box28.grid(column=15, row=3)
 
-        self.box29 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box29 = tk.Button(self.master,bg = 'red', height = butt_height, width = butt_width)
         self.box29.configure(command= lambda: self.change_color(self.box29))
         self.box29.grid(column=12, row=4)
-        self.box30 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box30 = tk.Button(self.master,bg = 'yellow', height = butt_height, width = butt_width)
         self.box30.configure(command= lambda: self.change_color(self.box30))
         self.box30.grid(column=13, row=4)
-        self.box31 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box31 = tk.Button(self.master,bg = 'green', height = butt_height, width = butt_width)
         self.box31.configure(command= lambda: self.change_color(self.box31))
         self.box31.grid(column=14, row=4)
-        self.box32 = tk.Button(self.master,bg = 'white', height = butt_height, width = butt_width)
+        self.box32 = tk.Button(self.master,bg = 'blue', height = butt_height, width = butt_width)
         self.box32.configure(command= lambda: self.change_color(self.box32))
         self.box32.grid(column=15, row=4)
 
@@ -286,58 +186,6 @@ class Robot_gui(tk.Frame):
             self.new_fill = 'green'
         elif f == 5:
             self.new_fill = 'blue'
-
-    def order(self):
-        color = self.box1['bg']
-        color += self.box2['bg']
-        color += self.box3['bg']
-        color += self.box4['bg']
-        color += self.box5['bg']
-        color += self.box6['bg']
-        color += self.box7['bg']
-        color += self.box8['bg']
-        color += self.box9['bg']
-        color += self.box10['bg']
-        color += self.box11['bg']
-        color += self.box12['bg']
-        color += self.box13['bg']
-        color += self.box14['bg']
-        color += self.box15['bg']
-        color += self.box16['bg']
-
-
-        color = color.replace('white', '1')
-        color = color.replace("red", "2")
-        color = color.replace('yellow', '3')
-        color = color.replace('green', '4')
-        color = color.replace('blue', '5')
-        print(color)
-
-        color2 = self.box17['bg']
-        color2 += self.box18['bg']
-        color2 += self.box19['bg']
-        color2 += self.box20['bg']
-        color2 += self.box21['bg']
-        color2 += self.box22['bg']
-        color2 += self.box23['bg']
-        color2 += self.box24['bg']
-        color2 += self.box25['bg']
-        color2 += self.box26['bg']
-        color2 += self.box27['bg']
-        color2 += self.box28['bg']
-        color2 += self.box29['bg']
-        color2 += self.box30['bg']
-        color2 += self.box31['bg']
-        color2 += self.box32['bg']
-
-
-        color2 = color2.replace('white', '1')
-        color2 = color2.replace("red", "2")
-        color2 = color2.replace('yellow', '3')
-        color2 = color2.replace('green', '4')
-        color2 = color2.replace('blue', '5')
-        print(color2)
-
 
     #Farven på knappen, der trykkes, ændres
     def change_color(self, button):
@@ -384,3 +232,32 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+
+#Code for database
+con = sqlite3.connect('start.db')
+
+try:
+    con.execute("""CREATE TABLE ordre (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		indhold1 INTEGER,
+        indhold2 INTEGER,
+        udført INTEGER,
+        movefrom INTEGER,
+        moveto INTEGER)""")
+except Exception as e:
+    print('Error Raised:')
+    print(e)
+
+try:
+    con.execute("""CREATE TABLE materialer (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		indhold INTEGER,
+        xkoord INTEGER,
+        ykoord INTEGER
+        )""")
+except Exception as e:
+    print('Error Raised:')
+    print(e)
