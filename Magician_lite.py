@@ -405,16 +405,18 @@ class Robot_gui(tk.Frame):
 def main():
     databaseRobot = dbClass()
     root = Tk()
-    ex = Robot_gui()
-    ex.connect_database(databaseRobot)
-    order_check = ex.db.getUnsolvedOrdre()
-    if order_check != None:
-        moves = ex.db.solveOrdre(order_check)
-        for i in moves:
-            ex.produktion(i[0],i[1],i[2],i[3])
-        ex.db.changeStatus(order_check,1)
     root.geometry("1920x1080")
-    root.mainloop()
+    while 1:
+        ex = Robot_gui()
+        ex.connect_database(databaseRobot)
+        order_check = ex.db.getUnsolvedOrdre()
+        if order_check != None:
+            moves = ex.db.solveOrdre(order_check)
+            for i in moves:
+                ex.produktion(i[0],i[1],i[2],i[3])
+            ex.db.changeStatus(order_check,1)
+
+
 
 
 if __name__ == '__main__':
