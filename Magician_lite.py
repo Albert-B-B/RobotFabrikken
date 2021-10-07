@@ -11,7 +11,7 @@ class dbClass():
     def __init__(self):
         #Code for database
         self.con = sqlite3.connect('start.db')
-
+        self.palletSize = 16
         try:
             c = self.con.cursor()
             self.con.execute("""CREATE TABLE ordre (
@@ -92,11 +92,12 @@ class dbClass():
         idfrom = output[0][2]
         idto = output[0][3]
 
-        pallet1 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idfrom]).fetchall()
-        pallet2 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idto]).fetchall()
+        pallet1 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idto]).fetchall()
+        pallet2 = c.execute("SELECT indhold,xkoord,ykoord FROM materialer WHERE id=?",[idfrom]).fetchall()
         self.con.commit()
 
         #We check if ordre is valid
+        print("Move stuff")
         print(indhold1)
         print(indhold2)
         print(pallet1[0][0])
@@ -104,18 +105,24 @@ class dbClass():
         #Order is valid and will be executed
         if self.validateOrdre(indhold1,indhold2,pallet1[0][0],pallet2[0][0]):
             moveList = []
-            for i in range(16):
+            for i in range(self.palletSize):
                 colorHex = self.get_digit(pallet1[0][0],i)
-                if indhold1 == colorHex:
+                if self.get_digit(indhold1,i) == self.get_digit(pallet1[0][0],i):
                     continue
                 else:
-                    for j in range(16):
-                        if colorHex == self.get_digit(pallet2[0][0], j) and colorHex != indhold2:
-                            moveList.append([i%4,(i-i%4)/4,j%4,(j-j%4)/4,moveFrom,moveTo])
-            return moveList
+                    for j in range(self.palletSize):
+                        if i==0:
+                            print("The one to rule em all")
+                            print(colorHex)
+                            self.get_digit(pallet2[0][0], j)
+                        if colorHex == self.get_digit(indhold2, j) and self.get_digit(pallet2[0][0], j) == 1:
+                            moveList.append([i%4,(i-i%4)/4,j%4,(j-j%4)/4,idto,idfrom])
+                            continue
             self.changeStatus(ordreID, 1)
+            return moveList
         #Order was invalid
         else:
+            print("Whack job")
             self.changeStatus(ordreID, -1)
 
 
@@ -395,11 +402,12 @@ class Robot_gui(tk.Frame):
 
 def main():
     databaseRobot = dbClass()
-    root = Tk()
-    ex = Robot_gui()
-    ex.connect_database(databaseRobot)
-    root.geometry("1920x1080")
-    root.mainloop()
+    print(databaseRobot.solveOrdre(databaseRobot.getUnsolvedOrdre()))
+    #root = Tk()
+    #ex = Robot_gui()
+    #ex.connect_database(databaseRobot)
+    #root.geometry("1920x1080")
+    #root.mainloop()
 
 
 if __name__ == '__main__':
