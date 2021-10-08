@@ -155,12 +155,12 @@ class Robot_gui(tk.Frame):
         self.nr_yellow = 0
         self.nr_green = 0
         self.nr_blue = 0
-        
+
         #opstart af robotten
         available_ports = list_ports.comports()
         self.port = available_ports[0].device
 
-        self.device = pydobot.Dobot(port=self.port, verbose=True)
+        self.device = pydobot.Dobot(port=self.port, verbose=False)
         (x, y, z, r, j1, j2, j3, j4) = self.device.pose()
 
         #Variabler som robotten skal benytte
@@ -171,9 +171,9 @@ class Robot_gui(tk.Frame):
         self.rstart = r
         self.r1 = r-135
         self.r2 = r+135
-        self.xbias = 73
-        self.ybias = -130
-        self.ybias2 = 70
+        self.xbias = 55
+        self.ybias = -120
+        self.ybias2 = 80
         self.zbias = 88
 
         self.initUI()
@@ -412,6 +412,7 @@ class Robot_gui(tk.Frame):
         order_check = self.db.getUnsolvedOrdre()
         if order_check != None:
             moves = self.db.solveOrdre(order_check)
+            print(moves)
             for i in moves:
                 self.produktion(i[0],i[1],i[2],i[3])
             self.db.changeStatus(order_check,1)
