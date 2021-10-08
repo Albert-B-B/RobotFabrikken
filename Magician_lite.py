@@ -126,6 +126,8 @@ class dbClass():
                             moveList.append([i%4,int((i-i%4)/4),j%4,int((j-j%4)/4),idto,idfrom,ordreID])
                             continue
             #self.changeStatus(ordreID, 1)
+            self.updatePallet(idto, pallet1[0][0])
+            self.updatePallet(idfrom, pallet2[0][0])
             return moveList
         #Order was invalid
         else:
