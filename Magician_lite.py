@@ -83,6 +83,10 @@ class dbClass():
         c = self.con.cursor()
         c.execute("UPDATE ordre SET udført = ? WHERE id = ?",(value,ordreID))
         self.con.commit()
+    def updatePallet(self,palletID,config):
+        c = self.con.cursor()
+        c.execute("UPDATE materialer SET indhold = ? WHERE id = ?",(config,palletID))
+        self.con.commit()
     def solveOrdre(self,ordreID):
         c = self.con.cursor()
 
