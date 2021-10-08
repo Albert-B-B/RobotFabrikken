@@ -155,7 +155,7 @@ class Robot_gui(tk.Frame):
         self.nr_yellow = 0
         self.nr_green = 0
         self.nr_blue = 0
-
+        
         #opstart af robotten
         available_ports = list_ports.comports()
         self.port = available_ports[0].device
@@ -171,13 +171,14 @@ class Robot_gui(tk.Frame):
         self.rstart = r
         self.r1 = r-135
         self.r2 = r+135
-        self.xbias = 70
-        self.ybias = -170
+        self.xbias = 73
+        self.ybias = -130
         self.ybias2 = 70
-        self.zbias = 87
+        self.zbias = 88
 
         self.initUI()
-        self.label.after(1000, self.main_mainloop)
+        self.timer = tk.Label(self.master, text="Hello world")
+        self.timer.after(50, self.main_mainloop)
 
     #Laver UI'en til programmet
     def initUI(self):
@@ -412,9 +413,10 @@ class Robot_gui(tk.Frame):
         if order_check != None:
             moves = self.db.solveOrdre(order_check)
             for i in moves:
-                ex.produktion(i[0],i[1],i[2],i[3])
+                self.produktion(i[0],i[1],i[2],i[3])
             self.db.changeStatus(order_check,1)
-        self.label.after(1000, self.main_mainloop)
+            order_check = None
+        self.timer.after(1000, self.main_mainloop)
 
 
 def main():
