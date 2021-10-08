@@ -155,7 +155,7 @@ class Robot_gui(tk.Frame):
         self.nr_yellow = 0
         self.nr_green = 0
         self.nr_blue = 0
-
+        
         #opstart af robotten
         available_ports = list_ports.comports()
         self.port = available_ports[0].device
@@ -178,7 +178,7 @@ class Robot_gui(tk.Frame):
 
         self.initUI()
         self.timer = tk.Label(self.master, text="Hello world")
-        self.timer.after(1000, self.main_mainloop)
+        self.timer.after(50, self.main_mainloop)
 
     #Laver UI'en til programmet
     def initUI(self):
