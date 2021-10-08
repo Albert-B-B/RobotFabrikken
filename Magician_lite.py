@@ -21,7 +21,7 @@ class dbClass():
                 udført INTEGER,
                 movefrom INTEGER,
                 moveto INTEGER)""")
-            c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)", (1345214523452345,1111121111111311,0,1,2))
+        #    c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)", (1345214523452345,1111121111111311,0,1,2))
             #c.execute("INSERT INTO ordre (indhold1,indhold2,udført,moveto,movefrom) VALUES (?,?,?,?,?)",(2345234523452345,2000000000000000,0,1,0))
         except Exception as e:
             print('Error Raised Ordre:')
@@ -165,13 +165,13 @@ class Robot_gui(tk.Frame):
         self.rstart = r
         self.r1 = r-135
         self.r2 = r+135
-        self.xbias = 52
-        self.ybias = -150
-        self.ybias2 = 50
+        self.xbias = 70
+        self.ybias = -170
+        self.ybias2 = 70
         self.zbias = 87
 
         self.initUI()
-
+        self.label.after(1000, self.main_mainloop)
 
     #Laver UI'en til programmet
     def initUI(self):
@@ -400,22 +400,24 @@ class Robot_gui(tk.Frame):
 
         self.device.move_to(self.xstart, self.ystart, self.zstart, self.rstart, wait = True)
 
+    def main_mainloop(self):
+
+        order_check = self.db.getUnsolvedOrdre()
+        if order_check != None:
+            moves = self.db.solveOrdre(order_check)
+            for i in moves:
+                ex.produktion(i[0],i[1],i[2],i[3])
+            self.db.changeStatus(order_check,1)
+        self.label.after(1000, self.main_mainloop)
 
 
 def main():
     databaseRobot = dbClass()
     root = Tk()
+    ex = Robot_gui()
+    ex.connect_database(databaseRobot)
     root.geometry("1920x1080")
-    while 1:
-        ex = Robot_gui()
-        ex.connect_database(databaseRobot)
-        order_check = ex.db.getUnsolvedOrdre()
-        if order_check != None:
-            moves = ex.db.solveOrdre(order_check)
-            for i in moves:
-                ex.produktion(i[0],i[1],i[2],i[3])
-            ex.db.changeStatus(order_check,1)
-
+    root.mainloop()
 
 
 
