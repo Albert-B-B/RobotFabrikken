@@ -124,7 +124,7 @@ class dbClass():
                             self.get_digit(pallet2[0][0], j)
                         if colorHex == self.get_digit(indhold2, j) and self.get_digit(pallet2[0][0], j) == 1:
                             moveList.append([i%4,int((i-i%4)/4),j%4,int((j-j%4)/4),idto,idfrom,ordreID])
-                            continue
+                            break
             #self.changeStatus(ordreID, 1)
             self.updatePallet(idto, pallet1[0][0])
             self.updatePallet(idfrom, pallet2[0][0])
