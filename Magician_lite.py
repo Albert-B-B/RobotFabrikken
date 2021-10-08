@@ -112,6 +112,7 @@ class dbClass():
             moveList = []
             for i in range(self.palletSize):
                 colorHex = self.get_digit(pallet1[0][0],i)
+                alreadyDone = []
                 if i == 0:
                     print(colorHex)
                 if self.get_digit(indhold1,i) == self.get_digit(pallet1[0][0],i):
@@ -122,17 +123,19 @@ class dbClass():
                             print("The one to rule em all")
                             print(colorHex)
                             self.get_digit(pallet2[0][0], j)
-                        if colorHex == self.get_digit(indhold2, j) and self.get_digit(pallet2[0][0], j) == 1:
+                        if colorHex == self.get_digit(indhold2, j) and self.get_digit(pallet2[0][0], j) == 1 and j not in alreadyDone:
+                            alreadyDone.append(j)
                             moveList.append([i%4,int((i-i%4)/4),j%4,int((j-j%4)/4),idto,idfrom,ordreID])
                             break
             #self.changeStatus(ordreID, 1)
-            self.updatePallet(idto, pallet1[0][0])
-            self.updatePallet(idfrom, pallet2[0][0])
+            self.updatePallet(idto, indhold1)
+            self.updatePallet(idfrom, indhold2)
             return moveList
         #Order was invalid
         else:
             print("Whack job")
             self.changeStatus(ordreID, -1)
+            return None
 
 
 print('hello world')
@@ -171,10 +174,10 @@ class Robot_gui(tk.Frame):
         self.rstart = r
         self.r1 = r-135
         self.r2 = r+135
-        self.xbias = 55
-        self.ybias = -120
-        self.ybias2 = 80
-        self.zbias = 88
+        self.xbias = 75
+        self.ybias = -130
+        self.ybias2 = 70
+        self.zbias = 86
 
         self.initUI()
         self.timer = tk.Label(self.master, text="Hello world")
@@ -385,7 +388,7 @@ class Robot_gui(tk.Frame):
         self.device.move_to(self.xstart, self.ystart, self.zstart, 0, wait = True)
 
 
-    def produktion(self, x1, y1, x2, y2, direction = 0):
+    def produktion(self, y1, x1, y2, x2, direction = 0):
         self.calibrate()
 
         xkoord = self.xstart + self.xbias + self.w*x1
@@ -411,7 +414,11 @@ class Robot_gui(tk.Frame):
 
         order_check = self.db.getUnsolvedOrdre()
         if order_check != None:
+
             moves = self.db.solveOrdre(order_check)
+            if moves == None:
+                self.timer.after(1000, self.main_mainloop)
+                return
             print(moves)
             for i in moves:
                 self.produktion(i[0],i[1],i[2],i[3])
